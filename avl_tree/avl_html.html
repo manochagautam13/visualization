@@ -12,14 +12,24 @@
     
 </head>
 <body>
-    <input type="text" id="insert_input" value="">
-    <button id="insert_button" onclick="read_input('insert_input')">insert</button>
-    <input type="text" id="delete_input" value="">
-    <button id="delete_button" onclick="read_input('delete_input')">delete</button>
-    <input type="text" id="find_input" value="">
-    <button id="find_button" onclick="read_input('find_input')">find</button>
-
-    <canvas id="canvas"></canvas>
-
+    <div class="row">
+        <div class="col-4">
+            <input type="text" id="insert_input" value="">
+            <button id="insert_button" onclick="read_input('insert_input')">insert</button>
+        </div>
+        <div class="col-4">
+            <input type="text" id="delete_input" value="">
+            <button id="delete_button" onclick="read_input('delete_input')">delete</button>
+        </div>
+        <div class="col-4">
+            <input type="text" id="find_input" value="">
+            <button id="find_button" onclick="read_input('find_input')">find</button>
+        </div>
+    </div>
+    <div class="row">    
+        <canvas id="canvas" width="200" height="100">
+            
+        </canvas>
+    </div>
     <script src="avl.js"></script>
 </body>
