@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVL Trees</title>
+    <link rel="stylesheet" href="stylling.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+    
+</head>
+<body>
+    <input type="text" id="insert_input" value="">
+    <button id="insert_button" onclick="read_input('insert_input')">insert</button>
+    <input type="text" id="delete_input" value="">
+    <button id="delete_button" onclick="read_input('delete_input')">delete</button>
+    <input type="text" id="find_input" value="">
+    <button id="find_button" onclick="read_input('find_input')">find</button>
+    <script>
+        function read_input(element_id)
+{
+    let temp = document.getElementById(element_id);
+    console.log(temp.value);
+    temp.value="";
+}
+</script>
+
+    <script scr="avl.js"></script>
+</body>
