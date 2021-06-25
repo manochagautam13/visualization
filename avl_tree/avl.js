@@ -191,7 +191,86 @@ class avlTree
         }
         this.levelorder(this.root);
     }
-    
+    find(value)
+    {
+        if (this.root==null) return null;
+        let temp = this.root;
+        while(temp)
+        {
+            if (temp.value<value) temp = temp.right;
+            else if (temp.value>value) temp = temp.left;
+            else return temp;
+        }
+        return null;
+    }
+    deletion(value)
+    {
+        let node = find(value);
+        if (node==null) return;
+        let parent = node.parent;
+        if (node.left && node.right)
+        {
+            let temp = node.right;
+            if (!temp.left) 
+            {
+                temp.parent.right = temp.right;
+                if (temp.right) temp.right.parent = temp.parent;
+                parent = temp.parent;
+                temp.parent = null;
+                node.value = temp.value;
+                temp.right = null;
+            }
+            else
+            {
+                while(temp.left) temp = temp.left;
+                parent = temp.parent;
+                temp.parent.left = temp.right;
+                if (temp.right) temp.right.parent = temp.parent;
+                node.value = temp.value;
+                temp.parent = null;
+                temp.right = null;
+            }
+        }
+        else
+        {
+            let temp = node.left;
+            if (temp==null) temp = node.right;
+            if (node==this.root) this.root = temp;
+            else if (node.parent.left == node) node.parent.left = temp;
+            else node.parent.right = temp;
+            if (temp) temp.parent = node.parent;
+            node.parent = null;
+            node.left = null;
+            node.right = null;
+        }
+        while(parent)
+        {
+            parent.updateHeight();
+            let leftHeight = 0,rightHeight = 0;
+            if (parent.left) leftHeight = parent.left.height;
+            if (parent.right) rightHeight = parent.right.height;
+            if (leftHeight-rightHeight>1)
+            {
+                let child = parent.left;
+                let lh=0,rh=0;
+                if (child.left) lh = child.left.height;
+                if (child.right) rh = child.right.height;
+                if (lh>=rh) this.rotatell(parent,child,child.left);
+                else this.rotatelr(parent,child,child.right);
+            }
+            else if (rightHeight-leftHeight>1)
+            {
+                let child = parent.right;
+                let lh=0,rh=0;
+                if (child.left) lh = child.left.height;
+                if (child.right) rh = child.right.height;
+                if (rh>=lh) this.rotaterr(parent,child,child.right);
+                else this.rotaterl(parent,child,child.left);
+            }
+            parent = parent.parent;
+        }
+        this.levelorder(this.root);
+    }
 }
 
 var newTree = new avlTree();
