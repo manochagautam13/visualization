@@ -5,8 +5,8 @@ function read_input(element_id)
     else if (element_id=='delete_input') newTree.deletion(parseInt(temp.value));
     else if (element_id=='find_input')
     {
-        if (newTree.find(parseInt(temp.value))==null) document.getElementById('txt').innerHTML = "Couldn't find";
-        else document.getElementById('txt').innerHTML = "found";
+        if (newTree.find(parseInt(temp.value))==null) document.getElementById('lvl').innerHTML = "Couldn't find";
+        else document.getElementById('lvl').innerHTML = "found";
     }
     temp.value="";
 }
@@ -90,14 +90,23 @@ class avlTree
     levelorder(root)
     {
         this.arr.push(root);
-        document.getElementById('txt').innerHTML = "";
+        document.getElementById('lvl').innerHTML = "";
         while(this.arr.length>0)
         {
             let temp = this.arr.shift();
-            document.getElementById('txt').innerHTML += temp.value+" ";
+            if (temp.parent && temp.parent.left == temp) document.getElementById('lvl').innerHTML += temp.parent.value+'L';
+            else if (temp.parent && temp.parent.right == temp) document.getElementById('lvl').innerHTML += temp.parent.value+'R';
+            document.getElementById('lvl').innerHTML += temp.value+" ";
             if (temp.left) {this.arr.push(temp.left);}
             if (temp.right) {this.arr.push(temp.right);}
         }
+    }
+    inorder(node)
+    {
+        if (node==null) return;
+        this.inorder(node.left);
+        document.getElementById('in').innerHTML += node.value+" ";
+        this.inorder(node.right);
     }
     insertion(value)
     {
@@ -106,6 +115,8 @@ class avlTree
         {
             this.root = newNode;
             this.levelorder(this.root);
+            document.getElementById('in').innerHTML = "";
+            this.inorder(this.root);
             return;
         }
         let temp = this.root;
@@ -195,7 +206,12 @@ class avlTree
             child = temp;
             temp = temp.parent;
         }
-        this.levelorder(this.root);
+        if (this.root) 
+        {
+            this.levelorder(this.root);
+            document.getElementById('in').innerHTML = "";
+            this.inorder(this.root);
+        }
     }
     find(value)
     {
@@ -211,7 +227,7 @@ class avlTree
     }
     deletion(value)
     {
-        let node = find(value);
+        let node = this.find(value);
         if (node==null) return;
         let parent = node.parent;
         if (node.left && node.right)
@@ -275,7 +291,12 @@ class avlTree
             }
             parent = parent.parent;
         }
-        this.levelorder(this.root);
+        if (this.root) 
+        {
+            this.levelorder(this.root);
+            document.getElementById('in').innerHTML = "";
+            this.inorder(this.root);
+        }
     }
 }
 
