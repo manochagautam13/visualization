@@ -52,7 +52,7 @@ class avlTree
         }
         else this.root = child;
         parent.left = child.right;
-        child.right.parent = parent;
+        if (child.right) child.right.parent = parent;
         child.right = parent;
         child.parent = parent.parent;
         parent.parent = child;
@@ -66,7 +66,7 @@ class avlTree
         }
         else this.root = child;
         parent.right = child.left;
-        child.left.parent = parent;
+        if (child.left) child.left.parent = parent;
         child.left = parent;
         child.parent = parent.parent;
         parent.parent = child;
