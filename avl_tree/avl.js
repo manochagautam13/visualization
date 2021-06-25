@@ -90,7 +90,7 @@ class avlTree
     levelorder(root)
     {
         this.arr.push(root);
-        document.getElementById('lvl').innerHTML = "";
+        document.getElementById('lvl').innerHTML = "Level Order : ";
         while(this.arr.length>0)
         {
             let temp = this.arr.shift();
@@ -115,7 +115,7 @@ class avlTree
         {
             this.root = newNode;
             this.levelorder(this.root);
-            document.getElementById('in').innerHTML = "";
+            document.getElementById('in').innerHTML = "Inorder: ";
             this.inorder(this.root);
             return;
         }
@@ -209,7 +209,7 @@ class avlTree
         if (this.root) 
         {
             this.levelorder(this.root);
-            document.getElementById('in').innerHTML = "";
+            document.getElementById('in').innerHTML = "Inorder: ";
             this.inorder(this.root);
         }
     }
@@ -294,7 +294,7 @@ class avlTree
         if (this.root) 
         {
             this.levelorder(this.root);
-            document.getElementById('in').innerHTML = "";
+            document.getElementById('in').innerHTML = "Inorder: ";
             this.inorder(this.root);
         }
     }
