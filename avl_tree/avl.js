@@ -1,7 +1,13 @@
 function read_input(element_id)
 {
     let temp = document.getElementById(element_id);
-    newTree.insertion(parseInt(temp.value));
+    if (element_id=='insert_input') newTree.insertion(parseInt(temp.value));
+    else if (element_id=='delete_input') newTree.deletion(parseInt(temp.value));
+    else if (element_id=='find_input')
+    {
+        if (newTree.find(parseInt(temp.value))==null) document.getElementById('txt').innerHTML = "Couldn't find";
+        else document.getElementById('txt').innerHTML = "found";
+    }
     temp.value="";
 }
 
