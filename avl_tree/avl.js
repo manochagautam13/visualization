@@ -52,6 +52,7 @@ class avlTree
         }
         else this.root = child;
         parent.left = child.right;
+        child.right.parent = parent;
         child.right = parent;
         child.parent = parent.parent;
         parent.parent = child;
@@ -65,6 +66,7 @@ class avlTree
         }
         else this.root = child;
         parent.right = child.left;
+        child.left.parent = parent;
         child.left = parent;
         child.parent = parent.parent;
         parent.parent = child;
@@ -94,6 +96,7 @@ class avlTree
         while(this.arr.length>0)
         {
             let temp = this.arr.shift();
+            console.log(temp);
             if (temp.parent && temp.parent.left == temp) document.getElementById('lvl').innerHTML += temp.parent.value+'L';
             else if (temp.parent && temp.parent.right == temp) document.getElementById('lvl').innerHTML += temp.parent.value+'R';
             document.getElementById('lvl').innerHTML += temp.value+" ";
@@ -115,7 +118,7 @@ class avlTree
         {
             this.root = newNode;
             this.levelorder(this.root);
-            document.getElementById('in').innerHTML = "Inorder: ";
+            document.getElementById('in').innerHTML = "Inorder: 4";
             this.inorder(this.root);
             return;
         }
