@@ -45,7 +45,7 @@ class avlTree
     {
         this.root = null;
         this.arr=[];
-        this.speed = 20;
+        this.speed = 2;
     }
     rotatell(parent,child,grandChild)
     {
@@ -128,11 +128,6 @@ class avlTree
         
         console.log(node.x, node.y);
 
-        if (node.x == newX)
-        {
-            // clearInterval();
-            return;
-        }
 
         // clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -152,32 +147,9 @@ class avlTree
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2, true);
         ctx.stroke();
-
-
-        // const date = Date.now();
-        // let currentDate = null;
-        // do {
-        //   currentDate = Date.now();
-        // } while (currentDate - date < this.speed)
-
-        
-        
-        return;
+        if (node.x==newX) return;
+        const interval = setTimeout((node,newX,newY)=>{this.move(node,newX,newY);},this.speed,node,newX,newY);
     }
-
-    draw(node, newX, newY)
-    {
-        while (node.x!=newX)
-        {
-            const date = Date.now();
-            let currentDate = null;
-            do {
-              currentDate = Date.now();
-            } while (currentDate - date < this.speed)
-            this.move(node, newX, newY);
-        }
-    }
-
     insertion(value)
     {
         const newNode = new treeNode(value);
@@ -189,17 +161,7 @@ class avlTree
             this.inorder(this.root);
             let newX = 200, newY = 150;
             // this.draw(newNode, newX, newY);
-            setInterval(this.move, this.speed, newNode, newX, newY);
-            console.log("ajssssssssss");
-            while (1)
-            {
-                if (newNode.x == newX)
-                {
-                    clearInterval();
-                    break;
-                }
-                break;
-            }
+            this.move(newNode, newX, newY);
             return;
         }
         let temp = this.root;
