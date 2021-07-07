@@ -20,6 +20,9 @@ class treeNode
         this.left = null;
         this.right = null;
         this.height = 1;
+        this.x = 40;
+        this.y = 40;
+        this.radius = 30;
     }
     updateHeight()
     {
@@ -42,6 +45,7 @@ class avlTree
     {
         this.root = null;
         this.arr=[];
+        this.speed = 20;
     }
     rotatell(parent,child,grandChild)
     {
@@ -111,6 +115,69 @@ class avlTree
         document.getElementById('in').innerHTML += node.value+" ";
         this.inorder(node.right);
     }
+
+    // drawTree(node)
+    // {
+    //     if (node == null) return;
+    // }
+
+    move(node, newX, newY)
+    {
+        let canvas = document.getElementById('board');
+        let ctx = canvas.getContext('2d');
+        
+        console.log(node.x, node.y);
+
+        if (node.x == newX)
+        {
+            // clearInterval();
+            return;
+        }
+
+        // clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        let slope = (newY-node.y)/(newX-node.x);
+        
+        let xshift = 1+(-2)*(node.x-newX>0)
+        node.x += xshift;
+        node.y += slope*xshift;
+
+        if (Math.abs(node.x-newX) < 1)
+        {
+            node.x = newX;
+            node.y = newY;
+        }
+
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2, true);
+        ctx.stroke();
+
+
+        // const date = Date.now();
+        // let currentDate = null;
+        // do {
+        //   currentDate = Date.now();
+        // } while (currentDate - date < this.speed)
+
+        
+        
+        return;
+    }
+
+    draw(node, newX, newY)
+    {
+        while (node.x!=newX)
+        {
+            const date = Date.now();
+            let currentDate = null;
+            do {
+              currentDate = Date.now();
+            } while (currentDate - date < this.speed)
+            this.move(node, newX, newY);
+        }
+    }
+
     insertion(value)
     {
         const newNode = new treeNode(value);
@@ -120,6 +187,19 @@ class avlTree
             this.levelorder(this.root);
             document.getElementById('in').innerHTML = "Inorder: 4";
             this.inorder(this.root);
+            let newX = 200, newY = 150;
+            // this.draw(newNode, newX, newY);
+            setInterval(this.move, this.speed, newNode, newX, newY);
+            console.log("ajssssssssss");
+            while (1)
+            {
+                if (newNode.x == newX)
+                {
+                    clearInterval();
+                    break;
+                }
+                break;
+            }
             return;
         }
         let temp = this.root;
@@ -301,6 +381,18 @@ class avlTree
             this.inorder(this.root);
         }
     }
+
+    drawInsert() {
+        let canvas = document.getElementById('board');
+        let ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.arc(40,40,30,0,2*Math.PI);
+        ctx.stroke();
+    }
 }
 
 var newTree = new avlTree();
+
+function draw() {
+    newTree.drawInsert();
+}
