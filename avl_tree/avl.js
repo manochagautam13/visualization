@@ -23,6 +23,8 @@ class treeNode
         this.x = 40;
         this.y = 40;
         this.radius = 30;
+        this.newX = 40;
+        this.newY = 40;
     }
     updateHeight()
     {
@@ -46,6 +48,8 @@ class avlTree
         this.root = null;
         this.arr=[];
         this.speed = 2;
+        this.constX = 500;
+        this.constY = 100;
     }
     rotatell(parent,child,grandChild)
     {
@@ -100,10 +104,10 @@ class avlTree
         while(this.arr.length>0)
         {
             let temp = this.arr.shift();
-            console.log(temp);
+            // console.log(temp);
             if (temp.parent && temp.parent.left == temp) document.getElementById('lvl').innerHTML += temp.parent.value+'L';
             else if (temp.parent && temp.parent.right == temp) document.getElementById('lvl').innerHTML += temp.parent.value+'R';
-            document.getElementById('lvl').innerHTML += temp.value+" ";
+            document.getElementById('lvl').innerHTML += temp.value+"("+temp.height+") ";
             if (temp.left) {this.arr.push(temp.left);}
             if (temp.right) {this.arr.push(temp.right);}
         }
@@ -112,43 +116,104 @@ class avlTree
     {
         if (node==null) return;
         this.inorder(node.left);
-        document.getElementById('in').innerHTML += node.value+" ";
+        document.getElementById('in').innerHTML += node.value+" ("+node.newX+") ";
         this.inorder(node.right);
     }
 
-    move(node, newX, newY)
+    move()
     {
         let canvas = document.getElementById('board');
         let ctx = canvas.getContext('2d');
         
-        console.log(node.x, node.y);
-
-
         // clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        let slope = (newY-node.y)/(newX-node.x);
-        
-        let xshift = 1+(-2)*(node.x-newX>0)
-        node.x += xshift;
-        node.y += slope*xshift;
+        let stopAnimation = true;
 
-        if (Math.abs(node.x-newX) < 1)
+        for (let node of this.arr)
         {
-            node.x = newX;
-            node.y = newY;
+            console.log(node.value, node.x, node.y);
+    
+            let slope = (node.newY-node.y)/(node.newX-node.x);
+            
+            let xshift = 1+(-2)*(node.x-node.newX>0);
+            if (node.x == node.newX)
+                xshift = 0;
+            node.x += xshift;
+            node.y += slope*xshift;
+    
+            if (node.x != node.newX)
+                stopAnimation = false;
+            
+            if (Math.abs(node.x-node.newX) < 1)
+            {
+                node.x = node.newX;
+                node.y = node.newY;
+            }
+            
+
+            // ctx.beginPath();
+            // ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2, true);
+            // ctx.stroke();
+    
+            this.drawInsert(node);
         }
 
-        // ctx.beginPath();
-        // ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2, true);
-        // ctx.stroke();
+        console.log(stopAnimation);
 
-        this.drawInsert(node);
-
-        if (node.x==newX) return;
-        const interval = setTimeout((node,newX,newY)=>{this.move(node,newX,newY);},this.speed,node,newX,newY);
+        if (stopAnimation)
+        {   
+            this.arr = [];
+            return;
+        }
+        const interval = setTimeout(()=>{this.move();},this.speed);
     }
-    insertion(value)
+
+
+    newPosition(node, x, y)
+    {
+        if (node == null) return x;
+        x = this.newPosition(node.left, x, y+1);
+        node.newX = x;
+        node.newY = y;
+        /////////////
+        // node.x = 2*x*node.radius + 100;
+        // node.y = y*100;
+        // this.drawInsert(node);
+        /////////////
+        x++;
+        x = this.newPosition(node.right, x, y+1);
+        return x;
+    }
+
+    relativePositionUpdate(node)
+    {
+        if (node==null) return;
+        this.relativePositionUpdate(node.left);
+        console.log("pre", node.newX, node.newY);
+        if (node != this.root)
+        {
+            node.newX = (node.newX - this.root.newX)*2*node.radius + this.constX;
+            node.newY = node.newY*100;
+        }
+        console.log("post",node.newX, node.newY);
+        this.arr.push(node);
+        this.relativePositionUpdate(node.right);
+    }
+
+
+    // moveFunction = async () => {
+    //     const result = await this.move();
+    //     // do something else here after firstFunction completes
+    //     this.newPosition(this.root, 0, 1);
+    //     this.relativePositionUpdate(this.root);
+    //     this.root.newX = this.constX;
+    //     this.root.newY = this.constY;
+    //     this.move();
+    //   }
+
+
+    async insertion(value)
     {
         const newNode = new treeNode(value);
         if (this.root == null)
@@ -156,12 +221,17 @@ class avlTree
             this.root = newNode;
 
             this.levelorder(this.root);
-            document.getElementById('in').innerHTML = "Inorder: 4";
+            document.getElementById('in').innerHTML = "Inorder: ";
             this.inorder(this.root);
 
             this.drawInsert(this.root);
-            let newX = 200, newY = 150;
-            this.move(this.root, newX, newY);
+            this.newPosition(this.root, 0, 1);
+            this.relativePositionUpdate(this.root);
+            
+            this.root.newX = this.constX, this.root.newY = this.constY;
+
+            this.move();
+
             return;
         }
         let temp = this.root;
@@ -194,6 +264,13 @@ class avlTree
                 }
             }
         }
+
+        this.newPosition(this.root, 0, 1);
+        this.relativePositionUpdate(this.root);
+        this.root.newX = this.constX;
+        this.root.newY = this.constY;
+        await this.move();
+
         let child = newNode,grandChild = null;
         
         while(temp)
@@ -251,13 +328,23 @@ class avlTree
             child = temp;
             temp = temp.parent;
         }
+
         if (this.root) 
         {
             this.levelorder(this.root);
             document.getElementById('in').innerHTML = "Inorder: ";
             this.inorder(this.root);
+
+            this.newPosition(this.root, 0, 1);
+            this.relativePositionUpdate(this.root);
+            this.root.newX = this.constX;
+            this.root.newY = this.constY;
+            this.move();
+            // this.moveFunction();
+
         }
     }
+
     find(value)
     {
         if (this.root==null) return null;
@@ -270,6 +357,7 @@ class avlTree
         }
         return null;
     }
+
     deletion(value)
     {
         let node = this.find(value);
