@@ -116,11 +116,6 @@ class avlTree
         this.inorder(node.right);
     }
 
-    // drawTree(node)
-    // {
-    //     if (node == null) return;
-    // }
-
     move(node, newX, newY)
     {
         let canvas = document.getElementById('board');
@@ -144,9 +139,12 @@ class avlTree
             node.y = newY;
         }
 
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2, true);
-        ctx.stroke();
+        // ctx.beginPath();
+        // ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2, true);
+        // ctx.stroke();
+
+        this.drawInsert(node);
+
         if (node.x==newX) return;
         const interval = setTimeout((node,newX,newY)=>{this.move(node,newX,newY);},this.speed,node,newX,newY);
     }
@@ -156,12 +154,14 @@ class avlTree
         if (this.root == null)
         {
             this.root = newNode;
+
             this.levelorder(this.root);
             document.getElementById('in').innerHTML = "Inorder: 4";
             this.inorder(this.root);
+
+            this.drawInsert(this.root);
             let newX = 200, newY = 150;
-            // this.draw(newNode, newX, newY);
-            this.move(newNode, newX, newY);
+            this.move(this.root, newX, newY);
             return;
         }
         let temp = this.root;
@@ -344,17 +344,17 @@ class avlTree
         }
     }
 
-    drawInsert() {
+    drawInsert(node) {
         let canvas = document.getElementById('board');
         let ctx = canvas.getContext('2d');
         ctx.beginPath();
-        ctx.arc(40,40,30,0,2*Math.PI);
+        ctx.arc(node.x,node.y,node.radius,0,2*Math.PI);
         ctx.stroke();
+        ctx.font = '20px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(node.value, node.x, node.y);
     }
 }
 
 var newTree = new avlTree();
-
-function draw() {
-    newTree.drawInsert();
-}
