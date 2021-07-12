@@ -47,9 +47,10 @@ class avlTree
     {
         this.root = null;
         this.arr=[];
-        this.speed = 2;
+        this.speed = 10;
         this.constX = 500;
         this.constY = 100;
+        this.timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
     }
     rotatell(parent,child,grandChild)
     {
@@ -104,7 +105,7 @@ class avlTree
         while(this.arr.length>0)
         {
             let temp = this.arr.shift();
-            // console.log(temp);
+            
             if (temp.parent && temp.parent.left == temp) document.getElementById('lvl').innerHTML += temp.parent.value+'L';
             else if (temp.parent && temp.parent.right == temp) document.getElementById('lvl').innerHTML += temp.parent.value+'R';
             document.getElementById('lvl').innerHTML += temp.value+"("+temp.height+") ";
@@ -120,7 +121,8 @@ class avlTree
         this.inorder(node.right);
     }
 
-    move()
+
+    async move()
     {
         let canvas = document.getElementById('board');
         let ctx = canvas.getContext('2d');
@@ -132,7 +134,7 @@ class avlTree
 
         for (let node of this.arr)
         {
-            console.log(node.value, node.x, node.y);
+            
     
             let slope = (node.newY-node.y)/(node.newX-node.x);
             
@@ -159,14 +161,15 @@ class avlTree
             this.drawInsert(node);
         }
 
-        console.log(stopAnimation);
+        
 
         if (stopAnimation)
         {   
             this.arr = [];
             return;
         }
-        const interval = setTimeout(()=>{this.move();},this.speed);
+        await this.timeout(this.speed);
+        return await this.move();
     }
 
 
@@ -190,13 +193,13 @@ class avlTree
     {
         if (node==null) return;
         this.relativePositionUpdate(node.left);
-        console.log("pre", node.newX, node.newY);
+        
         if (node != this.root)
         {
             node.newX = (node.newX - this.root.newX)*2*node.radius + this.constX;
             node.newY = node.newY*100;
         }
-        console.log("post",node.newX, node.newY);
+        
         this.arr.push(node);
         this.relativePositionUpdate(node.right);
     }
@@ -270,7 +273,8 @@ class avlTree
         this.root.newX = this.constX;
         this.root.newY = this.constY;
         await this.move();
-
+        console.log("don");
+        
         let child = newNode,grandChild = null;
         
         while(temp)
