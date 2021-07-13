@@ -1,14 +1,33 @@
-function read_input(element_id)
+async function read_input(element_id)
 {
-    let temp = document.getElementById(element_id);
-    if (element_id=='insert_input') newTree.insertion(parseInt(temp.value));
-    else if (element_id=='delete_input') newTree.deletion(parseInt(temp.value));
+    var temp = document.getElementById(element_id);
+    temp = temp.value;
+    const nodeArr = temp.split(",");
+
+    if (element_id=='insert_input') 
+    {
+        for (var i = 0; i < nodeArr.length; i++)
+        {
+            await newTree.insertion(parseInt(nodeArr[i]));
+        }
+    }
+    else if (element_id=='delete_input') 
+    {
+        for (var i = 0; i < nodeArr.length; i++)
+        {
+            await newTree.deletion(parseInt(nodeArr[i]));
+        }
+    }
     else if (element_id=='find_input')
     {
-        if (newTree.find(parseInt(temp.value))==null) document.getElementById('lvl').innerHTML = "Couldn't find";
-        else document.getElementById('lvl').innerHTML = "found";
+        for (var i = 0; i < nodeArr.length; i++)
+        {
+            if (newTree.find(parseInt(nodeArr[i]))==null) 
+                document.getElementById('lvl').innerHTML = "Couldn't find";
+            else 
+                document.getElementById('lvl').innerHTML = "found";    
+        }
     }
-    temp.value="";
 }
 
 class treeNode
