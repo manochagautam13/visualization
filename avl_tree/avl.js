@@ -500,11 +500,26 @@ class avlTree
         }
     }
 
+    canvas_arrow(context, fromx, fromy, tox, toy) {
+        var headlen = 10; // length of head in pixels
+        var dx = tox - fromx;
+        var dy = toy - fromy;
+        var angle = Math.atan2(dy, dx);
+        context.moveTo(fromx, fromy);
+        context.lineTo(tox, toy);
+        context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+        context.moveTo(tox, toy);
+        context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+      }
+
+    
+
     async drawInsert(node) {
         let canvas = document.getElementById('board');
         let ctx = canvas.getContext('2d');
         ctx.beginPath();
         ctx.arc(node.x,node.y,node.radius,0,2*Math.PI);
+        if (node.parent) this.canvas_arrow(ctx,(3*node.parent.x+node.x)/4,(3*node.parent.y+node.y)/4,(node.parent.x+3*node.x)/4,(node.parent.y+3*node.y)/4);
         ctx.stroke();
         ctx.font = '20px sans-serif';
         ctx.textAlign = 'center';
