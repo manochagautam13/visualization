@@ -67,7 +67,7 @@ class avlTree
         this.root = null;
         this.arr=[];
         this.speed = 1;
-        this.constX = 500;
+        this.constX = 750;
         this.constY = 100;
         this.timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
         this.step = 3;
