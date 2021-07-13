@@ -500,7 +500,7 @@ class avlTree
         let ctx = canvas.getContext('2d');
         ctx.beginPath();
         ctx.arc(node.x,node.y,node.radius,0,2*Math.PI);
-        if (node.parent) this.canvas_arrow(ctx,node.parent.x,node.parent.y,node.x,node.y);
+        if (node.parent) this.canvas_arrow(ctx,(3*node.parent.x+node.x)/4,(3*node.parent.y+node.y)/4,(node.parent.x+3*node.x)/4,(node.parent.y+3*node.y)/4);
         ctx.stroke();
         ctx.font = '20px sans-serif';
         ctx.textAlign = 'center';
