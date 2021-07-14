@@ -489,7 +489,7 @@ class avlTree
         await this.move();
         ///////////////////////////////////////
 
-        let node = this.find(value);
+        let node = await this.find(value);
         if (node==null) return;
         let parent = node.parent;
         if (node.left && node.right)
