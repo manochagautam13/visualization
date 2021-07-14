@@ -51,7 +51,7 @@ class avlTree
         this.constX = 500;
         this.constY = 100;
         this.timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
-        this.step = 3;
+        this.step = 2;
     }
 
     newPosition(node, x, y)
