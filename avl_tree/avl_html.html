@@ -14,27 +14,22 @@
 <body>
     <div class="row">
         <div class="col-4">
-            <input type="text" id="insert_input" value="">
+            <input type="text" onfocus="this.value=''" id="insert_input" value="">
             <button id="insert_button" onclick="read_input('insert_input')">insert</button>
         </div>
         <div class="col-4">
-            <input type="text" id="delete_input" value="">
+            <input type="text" onfocus="this.value=''" id="delete_input" value="">
             <button id="delete_button" onclick="read_input('delete_input')">delete</button>
         </div>
         <div class="col-4">
-            <input type="text" id="find_input" value="">
+            <input type="text" onfocus="this.value=''" id="find_input" value="">
             <button id="find_button" onclick="read_input('find_input')">find</button>
         </div>
-    </div>
-    <div class="row">    
-        <canvas id="canvas" width="200" height="0">
-            
-        </canvas>
     </div>
     <script src="avl.js"></script>
     <p id = "lvl"></p>
     <p id = "in"></p>
     <div>
-    <canvas id = "board" height=1000 width=1000>Not compatible!</canvas>
+    <canvas id = "board" height=1000 width=1500>Not compatible!</canvas>
     </div>
 </body>
