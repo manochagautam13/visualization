@@ -161,7 +161,7 @@ class avlTree
         
     }
 
-    async showPath(status)
+    async showPath(status,rotate = [])
     {
         let canvas = document.getElementById('board');
         let ctx = canvas.getContext('2d');
@@ -178,11 +178,42 @@ class avlTree
             await this.timeout(this.speed*1000);
         }
         node = this.path[this.path.length-1];
-        if (status != null)
-            ctx.strokeStyle = "green";
+        
         ctx.beginPath();
         ctx.arc(node.x,node.y,node.radius+3,0,2*Math.PI);
         ctx.stroke();
+        await this.timeout(this.speed*1000);
+        if (status != null)
+            ctx.strokeStyle = "green";
+        
+        ctx.beginPath();
+        ctx.arc(node.x,node.y,node.radius+3,0,2*Math.PI);
+        ctx.stroke();
+
+        if (rotate.length)
+        {
+            ctx.strokeStyle = "red";
+            node = rotate[0];
+            ctx.beginPath();
+            ctx.arc(node.x,node.y,node.radius+3,0,2*Math.PI);
+            ctx.stroke();
+            console.log(this.path);
+
+            ctx.strokeStyle = "pink";
+            node = rotate[1];
+            ctx.beginPath();
+            ctx.arc(node.x,node.y,node.radius+3,0,2*Math.PI);
+            ctx.stroke();
+            console.log(this.path);
+
+            ctx.strokeStyle = "cyan";
+            node = rotate[2];
+            ctx.beginPath();
+            ctx.arc(node.x,node.y,node.radius+3,0,2*Math.PI);
+            ctx.stroke();
+
+        }
+
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
         this.path = [];
@@ -351,7 +382,7 @@ class avlTree
         }
         // this.path.push(newNode);
         
-        await this.showPath(null);
+        await this.showPath(this.root);
         await this.timeout(2000);
 
 
@@ -361,12 +392,15 @@ class avlTree
         this.root.newX = this.constX;
         this.root.newY = this.constY;
         await this.move();
-        
+        await this.timeout(1000);
+
         let child = newNode,grandChild = null;
         
+        let rotate = [];
+
         while(temp)
         {
-            this.path.push(temp);
+            if (rotate.length == 0) this.path.push(temp);
             temp.updateHeight();
             if (temp.height>2)
             {
@@ -381,8 +415,8 @@ class avlTree
                 }
                 if (leftHeight-rightHeight>1) // ll or lr
                 {
-                    await this.showPath(null);
-                    await this.timeout(2000);
+                    rotate = [temp,child,grandChild];
+                    
                     if (child.left===grandChild) // ll
                     {
                         this.rotatell(temp,child,grandChild);
@@ -401,8 +435,7 @@ class avlTree
                 }
                 else if (rightHeight-leftHeight>1) // rr or rl
                 {
-                    await this.showPath(null);
-                    await this.timeout(2000);
+                    rotate = [temp,child,grandChild];
                     if (child.left===grandChild) //rl
                     {
                         await this.rotaterl(temp,child,grandChild);
@@ -424,6 +457,9 @@ class avlTree
             child = temp;
             temp = temp.parent;
         }
+
+        await this.showPath(null , rotate);
+        await this.timeout(2000);
 
         this.path = [];
 
@@ -609,5 +645,7 @@ class avlTree
         ctx.fillText(node.value, node.x, node.y);
     }
 }
+
+// put highlight vala in deletion
 
 var newTree = new avlTree();
