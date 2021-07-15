@@ -173,7 +173,7 @@ class avlTree
             node = this.path[i];
             
             ctx.beginPath();
-            ctx.arc(node.x,node.y,node.radius+2,0,2*Math.PI);
+            ctx.arc(node.x,node.y,node.radius+3,0,2*Math.PI);
             ctx.stroke();
             await this.timeout(this.speed*1000);
         }
@@ -181,7 +181,7 @@ class avlTree
         if (status != null)
             ctx.strokeStyle = "green";
         ctx.beginPath();
-        ctx.arc(node.x,node.y,node.radius+2,0,2*Math.PI);
+        ctx.arc(node.x,node.y,node.radius+3,0,2*Math.PI);
         ctx.stroke();
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
@@ -489,7 +489,7 @@ class avlTree
         await this.move();
         ///////////////////////////////////////
 
-        let node = this.find(value);
+        let node = await this.find(value);
         if (node==null) return;
         let parent = node.parent;
         if (node.left && node.right)
@@ -574,16 +574,25 @@ class avlTree
         }
     }
 
-    canvas_arrow(context, fromx, fromy, tox, toy) {
+    canvas_arrow(context, node) {
+        context.save();
         var headlen = 10; // length of head in pixels
-        var dx = tox - fromx;
-        var dy = toy - fromy;
+        context.translate(node.parent.x, node.parent.y);
+        var dx = node.x-node.parent.x;
+        var dy = node.y-node.parent.y;
         var angle = Math.atan2(dy, dx);
-        context.moveTo(fromx, fromy);
-        context.lineTo(tox, toy);
-        context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
-        context.moveTo(tox, toy);
-        context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+        context.rotate(angle);
+        var distance = Math.sqrt((dx*dx)+(dy*dy));
+        context.moveTo(node.radius,0);
+        context.lineTo(distance-node.radius,0);
+        context.translate(distance-node.radius,0);
+        context.rotate(Math.PI/6);
+        context.lineTo(-headlen,0);
+        context.moveTo(0,0);
+        context.rotate(-Math.PI/3);
+        context.lineTo(-headlen,0);
+        context.restore();
+        return;
     }
 
     async drawInsert(node) {
@@ -591,7 +600,8 @@ class avlTree
         let ctx = canvas.getContext('2d');
         ctx.beginPath();
         ctx.arc(node.x,node.y,node.radius,0,2*Math.PI);
-        if (node.parent) this.canvas_arrow(ctx,(3*node.parent.x+node.x)/4,(3*node.parent.y+node.y)/4,(node.parent.x+3*node.x)/4,(node.parent.y+3*node.y)/4);
+        // if (node.parent) this.canvas_arrow(ctx,(3*node.parent.x+node.x)/4,(3*node.parent.y+node.y)/4,(node.parent.x+3*node.x)/4,(node.parent.y+3*node.y)/4);
+        if (node.parent) this.canvas_arrow(ctx,node);
         ctx.stroke();
         ctx.font = '20px sans-serif';
         ctx.textAlign = 'center';
