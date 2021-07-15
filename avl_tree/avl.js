@@ -168,27 +168,30 @@ class avlTree
         ctx.strokeStyle = "yellow";
         ctx.lineWidth = 5;
         let node;
-        for (var i = 0; i < this.path.length-1; i++)
+        if (rotate.length == 0)
         {
-            node = this.path[i];
+            for (var i = 0; i < this.path.length-1; i++)
+            {
+                node = this.path[i];
+                
+                ctx.beginPath();
+                ctx.arc(node.x,node.y,node.radius+3,0,2*Math.PI);
+                ctx.stroke();
+                await this.timeout(this.speed*1000);
+            }
+            node = this.path[this.path.length-1];
             
             ctx.beginPath();
             ctx.arc(node.x,node.y,node.radius+3,0,2*Math.PI);
             ctx.stroke();
             await this.timeout(this.speed*1000);
+            if (status != null)
+                ctx.strokeStyle = "green";
+            
+            ctx.beginPath();
+            ctx.arc(node.x,node.y,node.radius+3,0,2*Math.PI);
+            ctx.stroke();
         }
-        node = this.path[this.path.length-1];
-        
-        ctx.beginPath();
-        ctx.arc(node.x,node.y,node.radius+3,0,2*Math.PI);
-        ctx.stroke();
-        await this.timeout(this.speed*1000);
-        if (status != null)
-            ctx.strokeStyle = "green";
-        
-        ctx.beginPath();
-        ctx.arc(node.x,node.y,node.radius+3,0,2*Math.PI);
-        ctx.stroke();
 
         if (rotate.length)
         {
@@ -235,6 +238,8 @@ class avlTree
         parent.updateHeight();
         child.updateHeight();
         grandChild.updateHeight();
+        await this.showPath(parent, [parent, child, grandChild]);
+        await this.timeout(1000);
     }
     async rotaterr(parent,child,grandChild)
     {
@@ -252,6 +257,8 @@ class avlTree
         parent.updateHeight();
         child.updateHeight();
         grandChild.updateHeight();
+        await this.showPath(parent, [parent, child, grandChild]);
+        await this.timeout(1000);
     }
     async rotatelr(parent,child,grandChild)
     {
@@ -266,13 +273,16 @@ class avlTree
         child.updateHeight();
         grandChild.updateHeight();
 
+        await this.showPath(parent, [parent, child, grandChild]);
+        await this.timeout(1000);
+
         this.newPosition(this.root, 0, 1);
         this.relativePositionUpdate(this.root);
         this.root.newX = this.constX;
         this.root.newY = this.constY;
         await this.move();
         
-        this.rotatell(parent,grandChild,child);
+        await this.rotatell(parent,grandChild,child);
     }
     async rotaterl(parent,child,grandChild)
     {
@@ -287,13 +297,16 @@ class avlTree
         child.updateHeight();
         grandChild.updateHeight();
 
+        await this.showPath(parent, [parent, child, grandChild]);
+        await this.timeout(1000);
+
         this.newPosition(this.root, 0, 1);
         this.relativePositionUpdate(this.root);
         this.root.newX = this.constX;
         this.root.newY = this.constY;
         await this.move();
         
-        this.rotaterr(parent,grandChild,child);
+        await this.rotaterr(parent,grandChild,child);
     }
     async levelorder(root)
     {
@@ -419,7 +432,7 @@ class avlTree
                     
                     if (child.left===grandChild) // ll
                     {
-                        this.rotatell(temp,child,grandChild);
+                        await this.rotatell(temp,child,grandChild);
                         temp.updateHeight();
                         child.updateHeight();
                         temp = child;
@@ -445,7 +458,7 @@ class avlTree
                     }
                     else if (child.right===grandChild)//rr
                     {
-                        this.rotaterr(temp,child,grandChild);
+                        await this.rotaterr(temp,child,grandChild);
                         temp.updateHeight();
                         child.updateHeight();
                         grandChild.updateHeight();
@@ -458,7 +471,7 @@ class avlTree
             temp = temp.parent;
         }
 
-        await this.showPath(null , rotate);
+        await this.showPath(null);
         await this.timeout(2000);
 
         this.path = [];
@@ -526,11 +539,15 @@ class avlTree
         ///////////////////////////////////////
 
         let node = await this.find(value);
+        await this.timeout(2000);
+
         if (node==null) return;
+        
         let parent = node.parent;
         if (node.left && node.right)
         {
             let temp = node.right;
+            this.path.push(temp);
             if (!temp.left) 
             {
                 temp.parent.right = temp.right;
@@ -542,7 +559,11 @@ class avlTree
             }
             else
             {
-                while(temp.left) temp = temp.left;
+                while(temp.left) 
+                {
+                    this.path.push(temp.left);
+                    temp = temp.left;
+                }
                 parent = temp.parent;
                 temp.parent.left = temp.right;
                 if (temp.right) temp.right.parent = temp.parent;
@@ -555,6 +576,7 @@ class avlTree
         {
             let temp = node.left;
             if (temp==null) temp = node.right;
+            if (temp != null) this.path.push(temp);
             if (node==this.root) this.root = temp;
             else if (node.parent.left == node) node.parent.left = temp;
             else node.parent.right = temp;
@@ -563,6 +585,16 @@ class avlTree
             node.left = null;
             node.right = null;
         }
+
+        await this.showPath(this.root);
+        await this.timeout(2000);
+
+        this.newPosition(this.root, 0, 1);
+        this.relativePositionUpdate(this.root);
+        this.root.newX = this.constX;
+        this.root.newY = this.constY;
+        await this.move();
+
         while(parent)
         {
             parent.updateHeight();
