@@ -7,3 +7,12 @@ input
 {
     background-color:white;
 }
+.legend{
+    margin-top: 10px;
+}
+li{
+    margin-left: 7px; 
+    font-size: 12px;
+    width: 300px;
+    background-color: rgba(0, 0, 0, 0.281);
+}
