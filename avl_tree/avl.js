@@ -599,38 +599,34 @@ class avlTree
 
         await this.callMove();
 
-        let rotate = 1;
-
         while(parent)
         {
-            if (rotate) this.path.push(parent);
+            this.path.push(parent);
             parent.updateHeight();
             let leftHeight = 0,rightHeight = 0;
             if (parent.left) leftHeight = parent.left.height;
             if (parent.right) rightHeight = parent.right.height;
             if (leftHeight-rightHeight>1)
             {
-                rotate = 0;
                 await this.showPath(parent, [], true);
                 await this.timeout(this.animationMultiplier * this.waitSpeed);
                 let child = parent.left;
                 let lh=0,rh=0;
                 if (child.left) lh = child.left.height;
                 if (child.right) rh = child.right.height;
-                if (lh>=rh) await this.rotatell(parent,child,child.left);
-                else await this.rotatelr(parent,child,child.right);
+                if (lh>=rh) {await this.rotatell(parent,child,child.left);await this.move();}
+                else {await this.rotatelr(parent,child,child.right);await this.move();}
             }
             else if (rightHeight-leftHeight>1)
             {
-                rotate = 0;
                 await this.showPath(parent, [], true);
                 await this.timeout(this.animationMultiplier * this.waitSpeed);
                 let child = parent.right;
                 let lh=0,rh=0;
                 if (child.left) lh = child.left.height;
                 if (child.right) rh = child.right.height;
-                if (rh>=lh) await this.rotaterr(parent,child,child.right);
-                else await this.rotaterl(parent,child,child.left);
+                if (rh>=lh) {await this.rotaterr(parent,child,child.right);await this.move();}
+                else {await this.rotaterl(parent,child,child.left);await this.move();}
             }
             
             parent = parent.parent;
