@@ -11,6 +11,8 @@ async function read_input(element_id)
     temp = temp.value;
     const nodeArr = temp.split(",");
 
+    if (nodeArr[0] == "") return;
+
     if (element_id=='insert_input') 
     {
         document.getElementById('found').innerHTML = "";
@@ -81,11 +83,11 @@ class avlTree
         this.moveSpeed = 5;
         this.showSpeed = 1000;
         this.waitSpeed = 750;
-        this.animationMultiplier = 1;
+        this.animationMultiplier = 0.5;
         this.constX = 750;
         this.constY = 100;
         this.timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
-        this.step = 5;
+        this.step = 10;
         this.path = [];
     }
 
@@ -614,8 +616,8 @@ class avlTree
                 let lh=0,rh=0;
                 if (child.left) lh = child.left.height;
                 if (child.right) rh = child.right.height;
-                if (lh>=rh) {await this.rotatell(parent,child,child.left);await this.move();}
-                else {await this.rotatelr(parent,child,child.right);await this.move();}
+                if (lh>=rh) {await this.rotatell(parent,child,child.left);await this.callMove();}
+                else {await this.rotatelr(parent,child,child.right);await this.callMove();}
             }
             else if (rightHeight-leftHeight>1)
             {
@@ -625,8 +627,8 @@ class avlTree
                 let lh=0,rh=0;
                 if (child.left) lh = child.left.height;
                 if (child.right) rh = child.right.height;
-                if (rh>=lh) {await this.rotaterr(parent,child,child.right);await this.move();}
-                else {await this.rotaterl(parent,child,child.left);await this.move();}
+                if (rh>=lh) {await this.rotaterr(parent,child,child.right);await this.callMove();}
+                else {await this.rotaterl(parent,child,child.left);await this.callMove();}
             }
             
             parent = parent.parent;
